@@ -1,6 +1,6 @@
 # pi-vikey — Vikey.ai Extension for Pi Coding Agent
 
-[![npm version](https://img.shields.io/npm/v/pi-vikey)](https://www.npmjs.com/package/pi-vikey)
+[![npm version](https://img.shields.io/npm/v/@aarestu/pi-vikey)](https://www.npmjs.com/package/@aarestu/pi-vikey)
 
 Official extension to connect **Pi Coding Agent** ([pi.dev](https://pi.dev)) with **Vikey.ai** — an AI inference gateway with local Indonesian payment support (QRIS/IDR).
 
@@ -49,7 +49,7 @@ Access leading LLM models directly from Pi CLI:
 
 ```bash
 # Install globally
-npm install -g pi-vikey
+npm install -g @aarestu/pi-vikey
 
 # Provider setup (optional — the extension auto-registers once installed)
 pi-vikey setup

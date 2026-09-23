@@ -1,6 +1,6 @@
 # pi-vikey — Ekstensi Vikey.ai untuk Pi Coding Agent
 
-[![npm version](https://img.shields.io/npm/v/pi-vikey)](https://www.npmjs.com/package/pi-vikey)
+[![npm version](https://img.shields.io/npm/v/@aarestu/pi-vikey)](https://www.npmjs.com/package/@aarestu/pi-vikey)
 
 Ekstensi resmi untuk menghubungkan **Pi Coding Agent** ([pi.dev](https://pi.dev)) dengan **Vikey.ai** — AI inference gateway dengan pembayaran lokal Indonesia (QRIS/IDR).
 
@@ -49,7 +49,7 @@ Dengan ekstensi ini, Anda bisa mengakses model LLM unggulan langsung dari Pi CLI
 
 ```bash
 # Install global
-npm install -g pi-vikey
+npm install -g @aarestu/pi-vikey
 
 # Setup provider (opsional — ekstensi sudah auto-register saat dipasang)
 pi-vikey setup
