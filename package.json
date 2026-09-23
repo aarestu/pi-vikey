@@ -1,0 +1,70 @@
+{
+  "name": "pi-vikey",
+  "version": "1.1.0",
+  "description": "Pi Coding Agent (pi.dev) extension to access LLM models via Vikey.ai (Claude 3.7, DeepSeek R1/V3, GPT-4o, Gemini 2.0, Qwen, etc.)",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "pi-vikey": "./dist/bin/cli.js"
+  },
+  "files": [
+    "dist",
+    "models.example.json",
+    "README.md",
+    "README.en.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aarestu/pi-vikey.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aarestu/pi-vikey/issues"
+  },
+  "homepage": "https://github.com/aarestu/pi-vikey#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "pi.dev",
+    "vikey",
+    "vikey-ai",
+    "ai-agent",
+    "llm-provider",
+    "claude",
+    "deepseek",
+    "openai",
+    "gemini"
+  ],
+  "pi": {
+    "extensions": [
+      "./dist/index.js"
+    ]
+  },
+  "scripts": {
+    "clean": "node -e \"fs.rmSync('dist',{recursive:true,force:true})\"",
+    "build": "npm run clean && tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json --watch",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "setup": "node dist/cli/setup.js",
+    "test:conn": "node dist/cli/test-connection.js",
+    "generate:example": "npm run build && node scripts/generate-example.js",
+    "prepare": "npm run build"
+  },
+  "author": "aarestu",
+  "license": "MIT",
+  "devDependencies": {
+    "@earendil-works/pi-ai": "^0.85.1",
+    "@earendil-works/pi-coding-agent": "0.85.1",
+    "@types/node": "^20.14.0",
+    "@vitest/coverage-v8": "^2.1.8",
+    "typescript": "^5.4.5",
+    "vitest": "^2.1.8"
+  }
+}
