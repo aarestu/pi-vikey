@@ -189,9 +189,37 @@ Di dalam TUI Pi (`pi` tanpa argumen), ketik:
 | Perintah | Deskripsi |
 |----------|-----------|
 | `/vikey` | Info status ekstensi & API key |
-| `/vikey-models` | Daftar lengkap model + spesifikasi |
-| `/vikey-test` | Tes koneksi ke Vikey.ai |
+| `/vikey-models` | Daftar model **live dari API** Vikey.ai |
+| `/vikey-test` | Tes koneksi & latensi ke Vikey.ai |
+| `/vikey-usage` | Pemakaian API key: request, token & total biaya |
 | `/vikey-setup` | Setup otomatis models.json |
+
+### Pemakaian vs Saldo
+
+```bash
+/vikey-usage          # atau: npm run usage
+```
+
+Menampilkan (dari API, memakai API key):
+
+```
+# Pemakaian Vikey.ai (API key)
+
+**Key aktif ini:**
+• Total request: 0 (sukses 0, gagal 0)
+• Token: 0 (input 0 / output 0)
+• Total biaya: 0
+
+**API key akun ini (3):**
+| Nama | Key | Pemakaian | Limit | Status |
+| localku | `vk-f...a07b` | 363 | ∞ | aktif |
+| sunahmuslim | `vk-e...fec6` | 2.686 | ∞ | aktif |
+| restu-pc ← aktif | `vk-2...4a7e` | 0 | ∞ | aktif |
+```
+
+> ⚠️ **Saldo akun tidak bisa dibaca dengan API key.** Endpoint saldo Vikey
+> (`https://app.vikey.ai/api/user/billing`) hanya menerima *access token dashboard*
+> (hasil login web), bukan API key. Untuk melihat saldo, buka dashboard Vikey.
 
 ### Contoh Output `/vikey`
 
@@ -204,8 +232,9 @@ Di dalam TUI Pi (`pi` tanpa argumen), ketik:
 • Path models.json: C:\Users\user\.pi\agent\models.json
 
 Perintah yang tersedia:
-• /vikey-models — Menampilkan daftar lengkap model & spesifikasi
+• /vikey-models — Daftar model live dari API Vikey.ai
 • /vikey-test   — Menguji koneksi & latensi ke server Vikey.ai
+• /vikey-usage  — Pemakaian, token & biaya API key
 • /vikey-setup  — Otomatis sinkronisasi model ke ~/.pi/agent/models.json
 
 Contoh penggunaan model langsung:
@@ -232,7 +261,7 @@ pi-vikey/
 │   │   ├── provider.ts        #   buildProviderConfig() → models.json / registerProvider
 │   │   └── format.ts          #   Render markdown daftar model
 │   ├── config/                # Konfigurasi
-│   │   ├── apiKey.ts          #   Resolusi API key (env, fallback)
+│   │   ├── apiKey.ts          #   API key: /login vikey (auth.json) + env fallback
 │   │   ├── paths.ts           #   Path models.json (global / project)
 │   │   └── modelsJson.ts      #   Read/write/merge models.json
 │   ├── api/                   # HTTP client
@@ -243,12 +272,14 @@ pi-vikey/
 │   │   ├── status.ts          #   /vikey
 │   │   ├── list.ts            #   /vikey-models
 │   │   ├── test.ts            #   /vikey-test
+│   │   ├── usage.ts           #   /vikey-usage
 │   │   ├── setup.ts           #   /vikey-setup
 │   │   └── register.ts        #   Registrasi ke pi.registerCommand
 │   ├── cli/                   # CLI mandiri (TS, dikompilasi ke dist)
 │   │   ├── args.ts            #   Parse argumen (murni)
 │   │   ├── setup.ts           #   npm run setup
-│   │   └── test-connection.ts #   npm run test:conn
+│   │   ├── test-connection.ts #   npm run test:conn
+│   │   └── usage.ts           #   npm run usage
 │   └── bin/                   # Executable `pi-vikey`
 │       └── cli.ts             #   Dispatch setup|test
 ├── tests/

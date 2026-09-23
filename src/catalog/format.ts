@@ -4,6 +4,7 @@
  */
 
 import { VIKEY_DEFAULT_BASE_URL, VIKEY_MODEL_CATALOG } from "./catalog.js";
+import type { ApiKeyInfo, UsageSummary } from "../api/usage.js";
 import type { ModelCategory, VikeyModelDefinition } from "./types.js";
 
 /** Human-readable headers for each category, in display order. */
@@ -52,14 +53,13 @@ export function formatModelsListMarkdown(
     lines.push("| :--- | :--- | :--- | :--- | :--- |");
     for (const model of models) {
       lines.push(
-        [
-          `| \`${model.id}\``,
+        tableRow([
+          `\`${model.id}\``,
           model.name,
           formatContextWindow(model.contextWindow),
           formatMaxTokens(model.maxTokens),
           model.recommended === true ? "⭐ Ya" : "-",
-          "|",
-        ].join(" | "),
+        ]),
       );
     }
     lines.push("");
@@ -94,14 +94,13 @@ export function formatRemoteModelsMarkdown(
   ];
   for (const model of models) {
     lines.push(
-      [
-        `| \`${model.id}\``,
+      tableRow([
+        `\`${model.id}\``,
         model.name,
         formatContextWindow(model.contextWindow),
         formatMaxTokens(model.maxTokens),
         model.reasoning === true ? "✓" : "-",
-        "|",
-      ].join(" | "),
+      ]),
     );
   }
   lines.push(
@@ -109,6 +108,61 @@ export function formatRemoteModelsMarkdown(
     "> Daftar ini diambil langsung dari API Vikey.ai. Ketik `/model` di TUI untuk memilih.",
   );
   return lines.join("\n");
+}
+
+/**
+ * Render the usage/API-key report as markdown.
+ * Pure presentation — no I/O.
+ */
+export function formatUsageMessage(
+  summary: UsageSummary,
+  keys: ReadonlyArray<ApiKeyInfo>,
+): string {
+  const lines: string[] = [
+    "# Pemakaian Vikey.ai (API key)",
+    "",
+    "**Key aktif ini:**",
+    `• Total request: ${formatCount(summary.totalRequests)} ` +
+      `(sukses ${formatCount(summary.successCount)}, gagal ${formatCount(summary.errorCount)})`,
+    `• Token: ${formatCount(summary.totalTokens)} ` +
+      `(input ${formatCount(summary.totalInputTokens)} / output ${formatCount(summary.totalOutputTokens)})`,
+    `• Total biaya: ${formatCount(summary.totalCost)}`,
+  ];
+
+  if (keys.length > 0) {
+    lines.push("", `**API key akun ini (${keys.length}):**`, "");
+    lines.push("| Nama | Key | Pemakaian | Limit | Status |");
+    lines.push("| :--- | :--- | :--- | :--- | :--- |");
+    for (const key of keys) {
+      lines.push(
+        tableRow([
+          `${key.name}${key.isCurrent ? " ← aktif" : ""}`,
+          `\`${key.maskedKey}\``,
+          formatCount(key.usageCount),
+          key.usageLimit === null ? "∞" : formatCount(key.usageLimit),
+          key.isActive ? "aktif" : "nonaktif",
+        ]),
+      );
+    }
+  }
+
+  lines.push(
+    "",
+    "> Pemakaian & biaya di atas berasal dari `GET /v1/api-keys/usage` dan `GET /v1/api-keys`.",
+    "> **Saldo akun tidak dapat dibaca dengan API key** — cek di dashboard Vikey",
+    "> (metrik biaya memakai satuan mata uang yang dipilih di dashboard, umumnya IDR).",
+  );
+  return lines.join("\n");
+}
+
+/** Thousands-separated integer for display. */
+function formatCount(value: number): string {
+  return new Intl.NumberFormat("id-ID").format(value);
+}
+
+/** Build a well-formed markdown table row: `| a | b | c |`. */
+function tableRow(cells: ReadonlyArray<string>): string {
+  return `| ${cells.join(" | ")} |`;
 }
 
 function groupByCategory(

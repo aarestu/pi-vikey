@@ -13,6 +13,7 @@ import { resolveApiKey, resolveStoredApiKey } from "../config/apiKey.js";
 import { buildStatusReport } from "./status.js";
 import { buildModelsMessage } from "./list.js";
 import { buildTestCommand } from "./test.js";
+import { buildUsageCommand } from "./usage.js";
 import { runSetupCommand } from "./setup.js";
 
 /**
@@ -56,6 +57,14 @@ export function registerVikeyCommands(pi: ExtensionAPI): void {
     description: "Menguji koneksi API ke server Vikey.ai",
     handler: async (_args, ctx) => {
       const { message } = await buildTestCommand({ apiKey: await resolveContextApiKey(ctx) });
+      ctx.ui.notify(message, "info");
+    },
+  });
+
+  pi.registerCommand("vikey-usage", {
+    description: "Menampilkan pemakaian & biaya API key Vikey.ai",
+    handler: async (_args, ctx) => {
+      const { message } = await buildUsageCommand({ apiKey: await resolveContextApiKey(ctx) });
       ctx.ui.notify(message, "info");
     },
   });

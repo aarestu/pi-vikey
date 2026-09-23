@@ -52,6 +52,7 @@ function renderStatusMessage(report: StatusReport, modelsJsonPath: string): stri
     "**Perintah yang tersedia:**",
     "• `/vikey-models` — Daftar model live dari API Vikey.ai",
     "• `/vikey-test`   — Menguji koneksi & latensi ke server Vikey.ai",
+    "• `/vikey-usage`  — Pemakaian, token & biaya API key",
     "• `/vikey-setup`  — Otomatis sinkronisasi model ke models.json",
     "",
     "**Contoh penggunaan model langsung:**",

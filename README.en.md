@@ -186,11 +186,26 @@ Inside Pi TUI (`pi` with no arguments), type:
 | Command | Description |
 |---------|-------------|
 | `/vikey` | Extension & API key status info |
-| `/vikey-models` | Full model list with specifications |
-| `/vikey-test` | Test connection to Vikey.ai |
+| `/vikey-models` | Model list **fetched live from the Vikey.ai API** |
+| `/vikey-test` | Test connection & latency to Vikey.ai |
+| `/vikey-usage` | API key usage: requests, tokens & total cost |
 | `/vikey-setup` | Auto-configure models.json |
 
 ---
+
+## Usage vs Balance
+
+```bash
+/vikey-usage          # or: npm run usage
+```
+
+Shows (via the API, using your API key): request/token/cost counters for the
+active key, plus all account API keys with their usage counts and limits.
+
+> ⚠️ **The account balance cannot be read with an API key.** Vikey's balance
+> endpoint (`https://app.vikey.ai/api/user/billing`) only accepts a *dashboard
+> access token* from the web login, not an API key. Open the Vikey dashboard to
+> check your balance.
 
 ## Project Structure
 
@@ -214,17 +229,20 @@ pi-vikey/
 │   ├── api/                   # HTTP client
 │   │   ├── client.ts          #   testVikeyConnection (injectable fetch)
 │   │   ├── models-fetch.ts    #   fetchRemoteModelIds — live GET /v1/models
+│   │   ├── usage.ts           #   Usage & API keys (/v1/api-keys*)
 │   │   └── refresh.ts         #   refreshModels handler (live + persist + fallback)
 │   ├── commands/              # Pure command handlers + pi wiring
 │   │   ├── status.ts          #   /vikey
 │   │   ├── list.ts            #   /vikey-models
 │   │   ├── test.ts            #   /vikey-test
+│   │   ├── usage.ts           #   /vikey-usage
 │   │   ├── setup.ts           #   /vikey-setup
 │   │   └── register.ts        #   Registration via pi.registerCommand
 │   ├── cli/                   # Standalone CLIs (TS, compiled to dist)
 │   │   ├── args.ts            #   Pure argument parsing
 │   │   ├── setup.ts           #   npm run setup
-│   │   └── test-connection.ts #   npm run test:conn
+│   │   ├── test-connection.ts #   npm run test:conn
+│   │   └── usage.ts           #   npm run usage
 │   └── bin/                   # `pi-vikey` executable
 │       └── cli.ts             #   Dispatch setup|test
 ├── tests/
@@ -306,6 +324,9 @@ pi -e ./dist/index.js
 
 # Test connection
 npm run test:conn
+
+# API key usage & cost
+npm run usage
 
 # Type-check (src + tests)
 npm run typecheck

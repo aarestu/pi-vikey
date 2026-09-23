@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   formatModelsListMarkdown,
+  formatRemoteModelsMarkdown,
   formatContextWindow,
   formatMaxTokens,
 } from "../../../src/catalog/format.ts";
@@ -45,6 +46,28 @@ describe("formatModelsListMarkdown", () => {
     const recommended = getRecommendedModels();
     expect(recommended.length).toBeGreaterThan(0);
     expect(markdown).toContain("⭐ Ya");
+  });
+
+  it("renders well-formed markdown table rows", () => {
+    const markdown = formatModelsListMarkdown(VIKEY_MODEL_CATALOG.slice(0, 2));
+    const rows = markdown.split("\n").filter((line) => line.startsWith("| `"));
+    expect(rows.length).toBeGreaterThan(0);
+    for (const row of rows) {
+      expect(row).toMatch(/^\| .* \|$/);
+      expect(row).not.toContain("| |");
+    }
+  });
+
+  it("renders well-formed markdown table rows", () => {
+    const models = [
+      { id: "gpt-4o", name: "GPT-4o", contextWindow: 128000, maxTokens: 16384, reasoning: true },
+    ];
+    const rows = formatRemoteModelsMarkdown(models)
+      .split("\n")
+      .filter((line) => line.startsWith("| `"));
+
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toBe("| `gpt-4o` | GPT-4o | 128k | 16k | ✓ |");
   });
 
   it("renders a subset catalog when provided", () => {

@@ -54,6 +54,7 @@
     "test:coverage": "vitest run --coverage",
     "setup": "node dist/cli/setup.js",
     "test:conn": "node dist/cli/test-connection.js",
+    "usage": "node dist/cli/usage.js",
     "generate:example": "npm run build && node scripts/generate-example.js",
     "prepare": "npm run build"
   },
